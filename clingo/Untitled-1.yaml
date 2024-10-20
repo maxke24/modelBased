@@ -1,0 +1,170 @@
+- type: vertical-stack
+            cards:
+              - type: custom:mushroom-title-card
+                title: Lights
+              - type: custom:mushroom-light-card
+                entity: light.bedroom_lights
+                name: all lights
+                icon: mdi:lightbulb-group
+                fill_container: false
+                use_light_color: true
+                show_color_temp_control: false
+                show_brightness_control: false
+                show_color_control: false
+                collapsible_controls: false
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-light-card
+                    entity: light.main_light
+                    name: Main light
+                    icon: mdi:ceiling-light
+                    use_light_color: true
+                  - type: custom:mushroom-light-card
+                    entity: light.desk_light
+                    name: Desk light
+                    icon: mdi:desk-lamp
+                    use_light_color: true
+                  - type: custom:mushroom-light-card
+                    entity: light.smart_plug_stopcontact_1
+                    name: Accessory lights
+                    icon: mdi:string-lights
+                    use_light_color: true
+          - type: vertical-stack
+            cards:
+              - type: custom:mushroom-title-card
+                title: Router
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.tp_link_router_total_clients
+                        show_graph: false
+                      - entity: sensor.tp_link_router_total_main_wifi_clients
+                        name: wifi users
+                        show_state: false
+                      - entity: sensor.tp_link_router_total_wired_clients
+                        name: wired users
+                        show_state: false
+                    name: internet users
+                    hours_to_show: 168
+                    points_per_hour: 0.25
+                    animate: true
+                    show:
+                      icon: false
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.tp_link_router_cpu_used
+                        name: cpu usage
+                      - entity: sensor.tp_link_router_memory_used
+                        name: memory usage
+                    name: router load
+                    hours_to_show: 168
+                    points_per_hour: 0.25
+                    animate: true
+                    show:
+                      icon: false
+          - type: vertical-stack
+            cards:
+              - type: custom:mushroom-title-card
+                title: Desktop
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: 'Drive: {{ states(entity) }}'
+                    secondary: >-
+                      {{ state_attr(entity, 'AvailableSpacePercentage') }}% | {{
+                      (state_attr(entity, 'UsedSpaceMB')/1048576) | round(2)
+                      }}TB/{{ (state_attr(entity, 'TotalSizeMB')/1048576) |
+                      round(2) }}TB
+                    icon: mdi:harddisk
+                    layout: vertical
+                    entity: sensor.desktop_desktop_storage_c
+                    icon_color: green
+                  - type: custom:mushroom-template-card
+                    primary: 'Drive: {{ states(entity) }}'
+                    secondary: >-
+                      {{ state_attr(entity, 'AvailableSpacePercentage') }}% | {{
+                      (state_attr(entity, 'UsedSpaceMB')/1048576) | round(2)
+                      }}TB/{{ (state_attr(entity, 'TotalSizeMB')/1048576) |
+                      round(2) }}TB
+                    icon: mdi:harddisk
+                    layout: vertical
+                    entity: sensor.desktop_desktop_storage_d
+                    icon_color: green
+                  - type: custom:mushroom-template-card
+                    primary: Turn off desktop
+                    secondary: ''
+                    icon: mdi:sleep
+                    entity: script.sleep
+                    layout: vertical
+                    fill_container: true
+                    icon_color: >-
+                      {% if
+                      is_state('sensor.desktop_desktop_monitorpowerstate','PowerOn')
+                      %}
+                        orange
+                      {% else %}
+                        grey
+                      {% endif %}
+                  - type: custom:mushroom-template-card
+                    primary: Start work
+                    secondary: ''
+                    icon: mdi:briefcase
+                    entity: script.work
+                    layout: vertical
+                    fill_container: true
+                    icon_color: >-
+                      {% if
+                      is_state('sensor.desktop_desktop_monitorpowerstate','PowerOn')
+                      %}
+                        orange
+                      {% else %}
+                        grey
+                      {% endif %}
+              - type: custom:mini-graph-card
+                entities:
+                  - entity: sensor.desktop_desktop_cpuload
+                    name: cpu load
+                hours_to_show: 4
+                points_per_hour: 16
+          - type: vertical-stack
+            cards:
+              - type: custom:mushroom-title-card
+                title: Sensors
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.temperature
+                        name: temperature
+                    name: Temperature
+                    hours_to_show: 48
+                    points_per_hour: 1
+                    lower_bound: 0
+                    upper_bound: 35
+                    animate: true
+                    hour24: true
+                    color_thresholds:
+                      - value: 15
+                        color: '#f39c12'
+                      - value: 20
+                        color: '#d35400'
+                      - value: 25
+                        color: '#c0392b'
+                  - type: custom:mini-graph-card
+                    entities:
+                      - entity: sensor.soil
+                        name: soil
+                    name: plant
+                    hours_to_show: 48
+                    points_per_hour: 1
+                    lower_bound: 0
+                    upper_bound: 1023
+                    animate: true
+                    color_thresholds:
+                      - value: 400
+                        color: lightgreen
+                      - value: 700
+                        color: darkorange
+                      - value: 900
+                        color: red
