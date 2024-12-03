@@ -1,3 +1,21 @@
+"""
+This script scrapes data about Belgian railway lines from Wikipedia, extracting information into CSV files.
+
+Key Features:
+- **Wikipedia Data Extraction:** Collects data from tables on Wikipedia pages about Belgian railway lines.
+- **Dynamic URL Handling:** Extracts and processes multiple URLs of railway lines from a main Wikipedia list.
+- **Data Cleaning and Saving:** Filters and formats the scraped data before saving it as CSV files.
+
+Functions:
+- **get_lijnnummer_urls:** Retrieves URLs of individual railway line pages from the main Wikipedia list.
+- **scrape_lijnnummer:** Processes each railway line page and extracts relevant data.
+- **scrape_table:** Parses and cleans data from the HTML table and writes it to a CSV file.
+
+Outputs:
+- Saves cleaned data into individual CSV files within the 'csv_number' directory.
+"""
+
+
 import requests
 from bs4 import BeautifulSoup
 import csv

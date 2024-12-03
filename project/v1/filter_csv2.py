@@ -1,3 +1,18 @@
+"""
+This script filters CSV files to retain only rows with nodes representing Belgian railway stations that have more than 500 travelers, based on data from Wikipedia.
+
+Key Features:
+- **Wikipedia Validation:** Checks if nodes exist in a Wikipedia table of Belgian railway stations and verifies their traveler count.
+- **CSV Filtering:** Reads CSV files, filters rows with valid nodes meeting the traveler threshold, and saves the results to a new directory.
+
+Functions:
+- **is_in_wikipedia_table:** Determines if a node is in the Wikipedia table and has more than 500 travelers.
+
+Outputs:
+- Filtered CSV files are saved in the 'csv_filtered' directory.
+"""
+
+
 import os
 import pandas as pd
 import requests

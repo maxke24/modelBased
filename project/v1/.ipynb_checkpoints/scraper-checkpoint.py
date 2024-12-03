@@ -1,3 +1,21 @@
+"""
+This script scrapes data about Belgian railway lines from Wikipedia, extracting information into CSV files.
+
+Key Features:
+- **Wikipedia Data Extraction:** Collects data from tables on Wikipedia pages about Belgian railway lines.
+- **Dynamic URL Handling:** Extracts and processes multiple URLs of railway lines from a main Wikipedia list.
+- **Data Cleaning and Saving:** Filters and formats the scraped data before saving it as CSV files.
+
+Functions:
+- **get_lijnnummer_urls:** Retrieves URLs of individual railway line pages from the main Wikipedia list.
+- **scrape_lijnnummer:** Processes each railway line page and extracts relevant data.
+- **scrape_table:** Parses and cleans data from the HTML table and writes it to a CSV file.
+
+Outputs:
+- Saves cleaned data into individual CSV files within the 'csv_number' directory.
+"""
+
+
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -6,7 +24,7 @@ import csv
 def scrape_table(table, number):  # Adjust the selector if needed
     number = number.replace('/', '_')
     # Open a CSV file to save the data
-    with open(f'csvs/output{number}.csv', mode='w', newline='', encoding='utf-8') as file:
+    with open(f'csv_number/output{number}.csv', mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(['sp-km', 'sp-tekst-r', 'line_number'])
 
@@ -30,14 +48,12 @@ def scrape_table(table, number):  # Adjust the selector if needed
                     sp_tekst_r_text = sp_tekst_r_td.get_text().strip() if sp_tekst_r_td else ''
                     if sp_tekst_r_text.startswith('Y '):
                         sp_tekst_r_text = sp_tekst_r_text[2:]
-                    
-                    # Remove trimming after space for sp-tekst-r
-                    sp_tekst_r_text = sp_tekst_r_text.strip() if sp_tekst_r_text else ''
-
+                    sp_tekst_r_text = sp_tekst_r_text.replace('1 1 1 1 1 1', '')#split()[0] if sp_tekst_r_text else ''
+                    if not ("van" in sp_tekst_r_text or "naar" in sp_tekst_r_text or "lijn" in sp_tekst_r_text):
                     # Only write the row if sp_tekst_r_text is not empty
-                    if sp_tekst_r_text:
-                        print(f"Writing row: {sp_km_float}, {sp_tekst_r_text}, {number}")  # Debug print
-                        writer.writerow([sp_km_float, sp_tekst_r_text, number])
+                        if sp_tekst_r_text:
+                            print(f"Writing row: {sp_km_float}, {sp_tekst_r_text}, {number}")  # Debug print
+                            writer.writerow([sp_km_float, sp_tekst_r_text, number])
                     else:
                         print(f"Empty sp-tekst-r text: {sp_km_float}")  # Debug print
 

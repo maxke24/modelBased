@@ -1,7 +1,6 @@
 #program base.
 
 % Include the graph
-#include "graph.lp".
 #include "routes.lp".
 #include "stops.lp".
 #include "stop_times.lp".
@@ -11,9 +10,9 @@ source("oostende").
 target("leuven").
 departure(12).
 
-chose_departure(T) :- T=T1+(0..3), departure(T1).
+chosen_departure(T) :- T=T1+(0..3), departure(T1).
 
-{source_id(R, X) : stops(R, X, S, _), departure_time(_, R, T)}5 :- source(S), chose_departure(T).
+{source_id(R, X) : stops(R, X, S, _), departure_time(_, R, T)}5 :- source(S), chosen_departure(T).
 {target_id(R, X) : stops(R, X, S, _)}5 :- target(S).
 :- source_id(R, X), target_id(R1, X1), R1 != R.
 :- #count{1, R : trip_id(R, X)} < 1.
@@ -28,14 +27,14 @@ intermediate_stops(S, N) :- trip_id(R, X), stops(R, S, _, N), stops(R, _, T, N1)
 
 travel_time(T) :- start_time(_, T1), intermediate_time(_, T2, N), N = #max{N' : intermediate_time(F', T', N')}, T = |T1 - T2|.
 
-#minimize{T : chose_departure(T)}.
+#minimize{T : chosen_departure(T)}.
 #minimize{T : travel_time(T)}.
 
 hours(H) :- travel_time(T), H = T/(3600).
-remainder(R) :- travel_time(T), R = T \ 3600.
 minutes(M) :- travel_time(T), M = (T \ 3600) / 60.
 
-#show chose_departure/1.
+travel_time(H, M) :- travel_time(T), H = T/(3600), M = (T \ 3600) / 60.
+
+#show chosen_departure/1.
 #show trip_id/2.
-#show hours/1.
-#show minutes/1.
+#show travel_time/2.
